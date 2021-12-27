@@ -7,7 +7,7 @@ baseUrlv1 = "https://bitbucket.org/api/1.0"
 username = ""
 password = ""
 role = "contributor" #admin, contributor, member, owner
-year = 2020
+year = 2021
 
 totalCommits = 0
 totalAdd = 0
@@ -32,6 +32,13 @@ while 'next' in repos:
 		repoSlug = repo["slug"]
 		# print(repoSlug)
 		# continue
+
+		# rewrite commit link to a link where our auth actually works:
+		# Not sure why this is necessary but it seems to work
+		# Fails (401):	https://bitbucket.org/!api/2.0/repositories/<workspace>/<repo>/commits
+		# Works: 		https://api.bitbucket.org/2.0/repositories/<workspace>/<repo>/commits
+		commitLink = commitLink.replace("bitbucket.org/!api", "api.bitbucket.org")
+
 		r = requests.get(commitLink,
 		auth=(username, password))
 
